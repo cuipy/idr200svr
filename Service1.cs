@@ -30,6 +30,10 @@ namespace idr200Svr1
             Thread t1 = new Thread(new ThreadStart(IDListener.readId));
             t1.IsBackground = true;
             t1.Start();
+
+            // 测试图片转换为base64
+            String str=ImgBase64.ImgToBase64String("C:/idr200log/1.jpg");
+            IdrLog.write(IdrLog.Warning,str);
         }
 
         protected override void OnStop()
