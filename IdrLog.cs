@@ -33,7 +33,7 @@ namespace idr200Svr1
             using (FileStream stream = new FileStream(filePath, FileMode.Append))
             using (StreamWriter writer = new StreamWriter(stream))
             {
-                writer.WriteLine(string.Format("{0:yyyy-MM-dd HH:mm:ss} "+info,DateTime.Now));
+                writer.WriteLine(string.Format("{0:yyyy-MM-dd HH:mm:ss} ",DateTime.Now)+"  "+info);
             }
         }
 

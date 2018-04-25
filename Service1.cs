@@ -21,8 +21,9 @@ namespace idr200Svr1
 
         protected override void OnStart(string[] args)
         {
-            WebSocket ws = new WebSocket();
-            ws.start(StaticVal.WebSocketPort);
+            //StaticVal.GlobalWebSocket = new WebSocket();
+            //StaticVal.GlobalWebSocket.start(StaticVal.WebSocketPort);
+            MyWebSocket.init(StaticVal.WebSocketPort);
 
             IdrLog.write(IdrLog.Debug, string.Format("{0:T},idr200 service started！", DateTime.Now));
 
@@ -31,9 +32,6 @@ namespace idr200Svr1
             t1.IsBackground = true;
             t1.Start();
 
-            // 测试图片转换为base64
-            String str=ImgBase64.ImgToBase64String("C:/idr200log/1.jpg");
-            IdrLog.write(IdrLog.Warning,str);
         }
 
         protected override void OnStop()

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Runtime.InteropServices;
+using System.Collections;
+using WebSocketSharp;
+using WebSocketSharp.Net;
 
 namespace idr200Svr1
 {
@@ -53,7 +56,8 @@ namespace idr200Svr1
                     int intOpenRet = InitComm(1001);
                     if (intOpenRet != 1)
                     {
-                        IdrLog.write(IdrLog.Debug, "阅读机具未连接");
+                        IdrLog.write(IdrLog.Warning, "阅读机具未连接");
+                        Thread.Sleep(10000);
                         continue;
                     }
 
@@ -61,7 +65,7 @@ namespace idr200Svr1
                     int intReadRet = Authenticate();
                     if (intReadRet != 1)
                     {
-                        IdrLog.write(IdrLog.Debug, "卡认证失败");
+                        IdrLog.write(IdrLog.Debug, "卡认证失败,可能的原因是您没有将身份证放在读卡器上。");
                         CloseComm();
                         continue;
                     }
@@ -79,14 +83,41 @@ namespace idr200Svr1
                         continue;
                     }
 
+                    // 读取身份证图片，并转换为base64位数据
+                    String p1base64 = StaticVal.Base64Prefix + ImgBase64.ImgToBase64String(StaticVal.LogDir + "/1.jpg");
+                    String p2base64 = StaticVal.Base64Prefix + ImgBase64.ImgToBase64String(StaticVal.LogDir + "/2.jpg");
+                    String p3base64 = StaticVal.Base64Prefix + ImgBase64.ImgToBase64String(StaticVal.LogDir + "/photo.bmp");
+                    String p4base64 = StaticVal.Base64Prefix + ImgBase64.ImgToBase64String(StaticVal.LogDir + "/photo.jpg");
 
-                    string idInfo = string.Format("Name:{0} Gender:{1} Folk:{2}, BirthDay:{3}, Code:{4}, Address:{5}, Agency:{6}, ExpireStart:{7}, ExpireEnd:{8}", Name, Gender, Folk, BirthDay, Code, Address, Agency, ExpireStart, ExpireEnd);
-                    IdrLog.write(IdrLog.Info, idInfo);
+                    Hashtable ht = new Hashtable();
+                    ht.Add("Name",Name.ToString());
+                    ht.Add("Gender", Gender.ToString());
+                    ht.Add("Folk", Folk.ToString());
+                    ht.Add("BirthDay", BirthDay.ToString());
+                    ht.Add("Code", Code.ToString());
+                    ht.Add("Address", Address.ToString());
+                    ht.Add("Agency", Agency.ToString());
+                    ht.Add("ExpireStart", ExpireStart.ToString());
+                    ht.Add("ExpireEnd", ExpireEnd.ToString());
+                    ht.Add("p1base64", p1base64.ToString());
+                    ht.Add("p2base64", p2base64.ToString());
+                    //ht.Add("p3base64", p3base64.ToString());
+                    ht.Add("p4base64", p4base64.ToString());
+
+                    string idInfo = JsonTools.ObjectToJson(ht);
+                    IdrLog.write(IdrLog.Debug, idInfo);
 
                     //关闭端口
                     int intCloseRet = CloseComm();
-                }catch{
 
+                    // 通知websocket客户端
+
+                    JsClient.sendAll(idInfo);
+
+                }
+                catch (Exception e)
+                {
+                    IdrLog.write(IdrLog.Error, e.Message + "\n"+ e.StackTrace);
                 }
             }
         }

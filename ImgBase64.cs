@@ -9,11 +9,17 @@ namespace idr200Svr1
 {
     class ImgBase64
     {
-
+        // 将一张图片转为Base64的内容 
         public static string ImgToBase64String(string Imagefilename)
         {
             try
             {
+                // 如果图片文件不存在
+                if (!File.Exists(Imagefilename))
+                {
+                    return null;
+                }
+
                 using (Bitmap bmp = new Bitmap(Imagefilename))
                 {
 
