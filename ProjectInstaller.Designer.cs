@@ -39,7 +39,7 @@
             // 
             // idrService
             // 
-            this.idrService.Description = "idr200服务";
+            this.idrService.Description = "idr200及其兼容身份证读卡器服务";
             this.idrService.ServiceName = "idrService";
             this.idrService.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
