@@ -17,6 +17,8 @@ namespace idr200Svr1
 
         protected override void OnOpen()
         {
+            StaticVal.WebSocketClientCount++;
+
             base.OnOpen();
 
             clients.Add(this.ID, this);
@@ -25,6 +27,8 @@ namespace idr200Svr1
 
         protected override void OnClose(CloseEventArgs e)
         {
+            StaticVal.WebSocketClientCount--;
+
             base.OnClose(e);
 
             clients.Remove(this.ID);

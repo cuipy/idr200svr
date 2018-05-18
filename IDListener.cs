@@ -48,6 +48,14 @@ namespace idr200Svr1
             {
                 try
                 {
+                    // 如果没有客户端链接，则不占用读卡器资源
+                    if (StaticVal.WebSocketClientCount <= 0)
+                    {
+                        Thread.Sleep(1000);
+                        continue;
+                    }
+
+                    IdrLog.write(IdrLog.Warning, "连接数:" + StaticVal.WebSocketClientCount);
 
                     IdrLog.write(IdrLog.Debug, "测试一下idr");
                     Thread.Sleep(300);

@@ -21,6 +21,8 @@ namespace idr200Svr1
         // base64图片前缀
         public static String Base64Prefix = "data:image/jpeg;base64,";
 
+        // websocket 客户链接数
+        public static int WebSocketClientCount = 0;
 
     }
 }
